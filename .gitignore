@@ -1,1 +1,3 @@
 build/
+libs/build_glfw
+libs/glew-2.1.0

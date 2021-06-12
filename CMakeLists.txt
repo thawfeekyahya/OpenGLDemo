@@ -15,6 +15,12 @@ foreach(chapter ${CHAPTERS})
 	add_subdirectory(${chapter})
 endforeach()
 
-add_executable(${PROJECT_NAME} main.cpp)
+
+include_directories( /usr/local/thyahya/Worksapce/OpenGL/libs/glew-2.1.0/include 
+	/usr/local/thyahya/Worksapce/OpenGL/libs/glfw/include )
+
+add_executable(${PROJECT_NAME} main.cpp 
+	${CMAKE_SOURCE_DIR}/libs/build_glfw/src/libglfw3.a 
+        ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/build/lib/libGLEW.a)
 
 target_link_libraries(${PROJECT_NAME} ${CHAPTERS})  
