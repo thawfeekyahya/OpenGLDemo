@@ -8,7 +8,7 @@
 const char* APP_TITLE = "Introduction to Modern OpenGL";
 const int gWindowWidth=800;
 const int gWindowHeight=600;
-bool gFullScreen = true;
+bool gFullScreen = false;
 
 
 void glfw_onKey(GLFWwindow* window,int key,int scancode,int action,int mode){
@@ -65,7 +65,7 @@ int main() {
     if( pVmode != NULL) {
       pWindow = glfwCreateWindow(pVmode->width,pVmode->height,APP_TITLE,pMonitor,NULL);
     }
-    
+
   } else {
     pWindow = glfwCreateWindow(gWindowWidth,gWindowHeight,APP_TITLE,NULL,NULL);
   }
