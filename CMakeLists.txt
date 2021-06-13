@@ -15,12 +15,30 @@ foreach(chapter ${CHAPTERS})
 	add_subdirectory(${chapter})
 endforeach()
 
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+find_package(Threads REQUIRED)
+
+
+
+link_libraries(
+   ${CMAKE_SOURCE_DIR}/libs/build_glfw/src/libglfw3.a
+   ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/build/lib/libGLEW.a
+   ${OPENGL_LIBRARIES} 
+   ${GLUT_LIBRARY}
+   ${CMAKE_THREAD_LIBS_INIT}
+   ${CMAKE_DL_LIBS}
+)  
+
 
 include_directories( /usr/local/thyahya/Worksapce/OpenGL/libs/glew-2.1.0/include 
-	/usr/local/thyahya/Worksapce/OpenGL/libs/glfw/include )
+	/usr/local/thyahya/Worksapce/OpenGL/libs/glfw/include
+        ${OPENGL_INCLUDE_DIRS}  
+        ${GLUT_INCLUDE_DIRS}
+ )
 
-add_executable(${PROJECT_NAME} main.cpp 
-	${CMAKE_SOURCE_DIR}/libs/build_glfw/src/libglfw3.a 
-        ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/build/lib/libGLEW.a)
+message("--------------->> ${CMAKE_SOURCE_DIR}/libs/build_glfw/src/libglfw3.a ")
 
-target_link_libraries(${PROJECT_NAME} ${CHAPTERS})  
+add_executable(${PROJECT_NAME} main.cpp)
+
+
