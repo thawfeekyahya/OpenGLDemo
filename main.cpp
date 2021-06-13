@@ -110,12 +110,35 @@ int main() {
     return -1;
   }
 
+
+  GLfloat vertices[] = {
+    0.0f, 0.5f, 0.0f,   //Top
+    0.05f, -0.5f, 0.0f, //Right
+    -0.05f, -0.5f, 0.0f //Left
+  };
+
+  GLuint vbo,vao; //vertex buffer object
+  
+  glGenBuffers(1,&vbo);
+  glBindBuffer(GL_ARRAY_BUFFER,vbo);
+  glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+
+  glGenVertexArrays(1, &vao);
+  glBindVertexArray(vao);
+
+  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+  glEnableVertexAttribArray(0);
+
   //Main Loop
 
    while (!glfwWindowShouldClose(pWindow)) {
     showFPS(pWindow);
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glBindVertexArray(vao);
+    glDrawArrays(GL_TRIANGLES,0,3);
+    glBindVertexArray(0);
 
     glfwSwapBuffers(pWindow);
   }
