@@ -20,7 +20,6 @@ find_package(GLUT REQUIRED)
 find_package(Threads REQUIRED)
 
 
-
 link_libraries(
    ${CMAKE_SOURCE_DIR}/libs/build_glfw/src/libglfw3.a
    ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/build/lib/libGLEW.a

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #define GLEW_STATIC
 #include "GL/glew.h"
@@ -7,6 +8,40 @@
 const char* APP_TITLE = "Introduction to Modern OpenGL";
 const int gWindowWidth=800;
 const int gWindowHeight=600;
+
+
+void glfw_onKey(GLFWwindow* window,int key,int scancode,int action,int mode){
+  if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+     glfwSetWindowShouldClose(window,GL_TRUE);
+  }
+}
+
+void showFPS(GLFWwindow* window) {
+   static double previousSeconds = 0.0;
+   static int frameCount = 0;
+   double elapsedSeconds;
+   double currentSeconds = glfwGetTime(); // reutrn number of seconds since GLFW started as a double
+
+   elapsedSeconds = currentSeconds - previousSeconds;
+
+   // limit text update 4 times per second
+   if(elapsedSeconds > 0.25) {
+     previousSeconds = currentSeconds;
+     double fps = (double)frameCount / elapsedSeconds;
+     double msPerFrame = 1000.0 / fps;
+
+     std::ostringstream outs;
+     outs.precision(3);
+     outs << std::fixed
+          << APP_TITLE << "   "
+          <<"FPS" << fps << "  "
+          <<"Frame Time:" << msPerFrame << " (ms)";
+     glfwSetWindowTitle(window,outs.str().c_str());
+
+     frameCount = 0;
+   }
+   frameCount++;
+}
 
 int main() {
 
@@ -29,16 +64,24 @@ int main() {
 
   glfwMakeContextCurrent(pWindow);
 
+  glfwSetKeyCallback(pWindow,glfw_onKey);
+
   glewExperimental = GL_TRUE;
   if (glewInit() != GLEW_OK ) {
     std::cerr << "GLEW Failed " << std::endl;
   }
 
   while (!glfwWindowShouldClose(pWindow)) {
+    showFPS(pWindow);
     glfwPollEvents();
+    glClearColor(0.23f,0.38f,0.47f,1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     glfwSwapBuffers(pWindow);
   }
 
   glfwTerminate();
   return 0;
 }
+
+
