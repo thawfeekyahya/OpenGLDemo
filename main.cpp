@@ -130,29 +130,50 @@ int main() {
     return -1;
   }
 
-
+  /* 
+  Vertices and Color in single vertex buffer object
   GLfloat vertices[] = {
     // pos1 pos1 pos3 is x y and z and pos4 pos5 pos6 is RGB
     0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,   //Top
     0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,//Right
     -0.5f, -0.5f, 0.0f, 0.0f,0.0f, 1.0f //Left
   };
+  */
+  //Triangle position
+  GLfloat vert_pos[] = {
+    0.0f,0.5f,0.0f,   //Top
+    0.5f,-0.5f,0.0f,  //Right
+    -0.5f,-0.5f,0.0f  //Left
+  };
 
-  GLuint vbo,vao; //vertex buffer object
+  //Triangle color
+  GLfloat vert_color[] = {
+    1.0f,0.0f,0.0f,
+    0.0f,1.0f,0.0f,
+    0.0f,0.0f,1.0f
+  };
+
+  GLuint vbo,vbo2,vao; //vertex buffer object
   
   glGenBuffers(1,&vbo);
   glBindBuffer(GL_ARRAY_BUFFER,vbo);
-  glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER,sizeof(vert_pos),vert_pos,GL_STATIC_DRAW);
+
+  glGenBuffers(1,&vbo2);
+  glBindBuffer(GL_ARRAY_BUFFER,vbo2);
+  glBufferData(GL_ARRAY_BUFFER,sizeof(vert_color),vert_color,GL_STATIC_DRAW);
 
   glGenVertexArrays(1, &vao);
   glBindVertexArray(vao);
 
   //Position Attribute
-  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(GLfloat) * 6,NULL);
+  glBindBuffer(GL_ARRAY_BUFFER,vbo);
+  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
   glEnableVertexAttribArray(0);
 
   //Color Attribute
-  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(GLfloat) * 6,(GLvoid*)(sizeof(GLfloat)*3));
+  glBindBuffer(GL_ARRAY_BUFFER,vbo2);
+  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,NULL);
   glEnableVertexAttribArray(1);
 
 
