@@ -13,6 +13,22 @@ const int gWindowHeight=600;
 bool gFullScreen = false;
 GLFWwindow* pWindow = NULL;
 
+const GLchar* vertexShaderSrc = 
+"#version 330 core\n"
+"layout (location = 0) in vec3 pos;"
+"void main()"
+"{"
+" gl_Position = vec4(pos.x,pos.y,pos.z,1.0);"
+"}";
+
+const GLchar* fragmentShaderSrc = 
+"#version 330 core \n"
+"out vec4 frag_color;"
+"void main()"
+"{"
+" frag_color = vec4(0.35f,0.96f,0.3f,1.0f);"
+"}";
+
 //--------------Function protos
 
 void glfw_onKey(GLFWwindow* window,int key,int scancode,int action,int mode);
@@ -113,8 +129,8 @@ int main() {
 
   GLfloat vertices[] = {
     0.0f, 0.5f, 0.0f,   //Top
-    0.05f, -0.5f, 0.0f, //Right
-    -0.05f, -0.5f, 0.0f //Left
+    0.5f, -0.5f, 0.0f, //Right
+    -0.5f, -0.5f, 0.0f //Left
   };
 
   GLuint vbo,vao; //vertex buffer object
@@ -129,6 +145,45 @@ int main() {
   glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
   glEnableVertexAttribArray(0);
 
+  GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(vs,1,&vertexShaderSrc,NULL);
+  glCompileShader(vs);
+
+  GLint results;
+  GLchar infoLog[512];
+
+  glGetShaderiv(vs,GL_COMPILE_STATUS, &results);
+  if(!results) {
+    glGetShaderInfoLog(vs,sizeof(infoLog),NULL,infoLog);
+    std::cout<<" Error! Vertex sharder failed to compile"<<infoLog<<std::endl;
+  }
+
+
+  GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fs,1,&fragmentShaderSrc,NULL);
+  glCompileShader(fs);
+
+   glGetShaderiv(fs,GL_COMPILE_STATUS, &results);
+  if(!results) {
+    glGetShaderInfoLog(vs,sizeof(infoLog),NULL,infoLog);
+    std::cout<<" Error! Fragment sharder failed to compile"<<infoLog<<std::endl;
+  }
+
+
+  GLuint shaderProgram = glCreateProgram();
+  glAttachShader(shaderProgram,vs);
+  glAttachShader(shaderProgram,fs);
+  glLinkProgram(shaderProgram);
+
+  glGetProgramiv(shaderProgram,GL_LINK_STATUS,&results);
+  if(!results) {
+    glGetProgramInfoLog(shaderProgram,sizeof(infoLog),NULL,infoLog);
+    std::cout<< "Error! Shader Program linker failure" <<infoLog<<std::endl;
+  }
+
+  glDeleteShader(vs);
+  glDeleteShader(fs);
+
   //Main Loop
 
    while (!glfwWindowShouldClose(pWindow)) {
@@ -136,12 +191,18 @@ int main() {
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
 
+    glUseProgram(shaderProgram);
+
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES,0,3);
     glBindVertexArray(0);
 
     glfwSwapBuffers(pWindow);
   }
+
+  glDeleteProgram(shaderProgram);
+  glDeleteVertexArrays(1,&vao);
+  glDeleteBuffers(1,&vbo);
 
   glfwTerminate();
   return 0;
