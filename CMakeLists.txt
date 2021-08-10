@@ -30,14 +30,13 @@ link_libraries(
 )  
 
 
-include_directories( /usr/local/thyahya/Worksapce/OpenGL/libs/glew-2.1.0/include 
-	/usr/local/thyahya/Worksapce/OpenGL/libs/glfw/include
-        ${OPENGL_INCLUDE_DIRS}  
-        ${GLUT_INCLUDE_DIRS}
+include_directories( 
+   ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/include 
+   ${CMAKE_SOURCE_DIR}/libs/glfw/include
+   ${OPENGL_INCLUDE_DIRS}  
+   ${GLUT_INCLUDE_DIRS}
  )
 
-message("--------------->> ${CMAKE_SOURCE_DIR}/libs/build_glfw/src/libglfw3.a ")
-
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp lesson1)
 
 

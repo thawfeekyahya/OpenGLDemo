@@ -7,7 +7,7 @@
 
 //-----------------Global Properites
 
-const char* APP_TITLE = "Introduction to Modern OpenGL";
+const char* APP_TITLE = "Introduction to Modern OpenGL - Hello Shaders";
 const int gWindowWidth=800;
 const int gWindowHeight=600;
 bool gFullScreen = false;
@@ -234,6 +234,7 @@ int main() {
   glDeleteProgram(shaderProgram);
   glDeleteVertexArrays(1,&vao);
   glDeleteBuffers(1,&vbo);
+  glDeleteBuffers(1,&ibo);
 
   glfwTerminate();
   return 0;
