@@ -11,21 +11,23 @@
 GLFWwindow* pWindow = NULL;
 
 
-const GLchar* vertexShaderSrc = 
-"#version 330 core\n"
-"layout (location = 0) in vec3 pos;"
-"void main()"
-"{"
-" gl_Position = vec4(pos.x,pos.y,pos.z,1.0);"
-"}";
+const GLchar* vertexShaderSrc = R"END(
+  #version 330 core
+  layout (location = 0) in vec3 pos;
+  void main()
+  {
+  gl_Position = vec4(pos.x,pos.y,pos.z,1.0);
+  }
+)END";
 
-const GLchar* fragmentShaderSrc = 
-"#version 330 core \n"
-"out vec4 frag_color;"
-"void main()"
-"{"
-" frag_color = vec4(0.35f,0.96f,0.3f,1.0f);"
-"}";
+const GLchar* fragmentShaderSrc = R"END(
+#version 330 core 
+out vec4 frag_color;
+void main()
+{
+ frag_color = vec4(0.35f,0.96f,0.3f,1.0f);
+}
+)END";
 
 
 
