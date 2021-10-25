@@ -8,7 +8,7 @@ message("-------------------------------${PROJECT_NAME}-------------------------
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
 
-list(APPEND CHAPTERS shaders)
+list(APPEND CHAPTERS modules)
 
 
 foreach(chapter ${CHAPTERS})
@@ -37,6 +37,8 @@ include_directories(
    ${GLUT_INCLUDE_DIRS}
  )
 
-add_executable(${PROJECT_NAME} main.cpp lesson1)
+add_executable(${PROJECT_NAME} main.cpp)
+
+target_link_libraries(${PROJECT_NAME} ${CHAPTERS})
 
 

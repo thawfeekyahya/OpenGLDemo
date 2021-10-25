@@ -11,7 +11,7 @@ get_filename_component(name ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 add_library(${name} ${SRCS})
 
 target_include_directories(${name} PUBLIC ${HDR_DIR}
-    ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/include 
+        ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/include 
         ${CMAKE_SOURCE_DIR}/libs/glfw/include
         ${OPENGL_INCLUDE_DIRS}  
         ${GLUT_INCLUDE_DIRS}
