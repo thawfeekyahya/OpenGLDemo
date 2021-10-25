@@ -1,4 +1,5 @@
 #include "SimpleShader.h"
+#include <iostream>
 
 SimpleShader::SimpleShader(){}
 
@@ -67,8 +68,52 @@ void SimpleShader::enableActiveVertexArrayObj(GLuint* obj)
 
   //enable this vertex array
   glEnableVertexAttribArray(vertexId); 
-
 }
 
 
+void SimpleShader::createVertexShader(GLuint& pShader) {
+  glShaderSource(pShader,1,getVertexShader(0),0);
+  glCompileShader(pShader);
+
+  GLint vertexCompilationStatus; 
+  glGetShaderiv(pShader,GL_COMPILE_STATUS,&vertexCompilationStatus);
+
+  checkForError(pShader,vertexCompilationStatus);
+}
+
+void SimpleShader::createFragmentShader(GLuint& pShader) {
+   //Fragment shader
+  glShaderSource(pShader,1,getFragmentShader(0),0);
+  glCompileShader(pShader);
+
+  GLint fragmentCompilationStatus; 
+  glGetShaderiv(pShader,GL_COMPILE_STATUS,&fragmentCompilationStatus);
+  checkForError(pShader,fragmentCompilationStatus);
+}
+
+void SimpleShader::checkForError(GLuint& pShader,GLint& status) {
+  if(status == GL_FALSE) {
+    GLchar message[256];
+    glGetShaderInfoLog(pShader,sizeof(message),0,&message[0]);
+    std::cout<<message<<"-> Error creating shader program";
+    exit(1);
+  }
+}
+
+void SimpleShader::linkShaders(GLuint& shaderProgram,GLuint& vertexShader,GLuint& fragmentShader) {
+
+  GLint status;
+
+  glAttachShader(shaderProgram,vertexShader);
+  glAttachShader(shaderProgram,fragmentShader); 
+  glLinkProgram(shaderProgram);
+
+  glGetProgramiv(shaderProgram,GL_LINK_STATUS,&status);
+  checkForError(shaderProgram,status);
+  
+  //Clean up after linking
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
+
+}
 
