@@ -6,6 +6,10 @@
 class SimpleShader {
 private:
 
+// Data in CPU memory
+
+
+//location = 0 is the same id represent in vertexAttribPointer
 const GLchar* vertex1 = R"END(
    #version 330 core
    layout (location = 0) in vec3 pos;
@@ -28,7 +32,19 @@ public :
    SimpleShader();
    const GLchar** getVertexShader(int id=0);
    const GLchar** getFragmentShader(int id=0);
+   void drawTriangle(GLuint* bufferObject);
+   void enableActiveVertexArrayObj(GLuint* obj);
 };
+
+
+
+
+
+
+
+
+
+
 
 
 

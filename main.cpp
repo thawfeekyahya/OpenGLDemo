@@ -5,6 +5,7 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "MainWindow.h"
+#include "SimpleShader.h"
 
 //-----------------Global Properites
 
@@ -34,6 +35,7 @@ void main()
 int main() {
 
   MainWindow openglWindow;
+  SimpleShader simple;
 
   pWindow = openglWindow.initOpenGL();
 
@@ -42,6 +44,13 @@ int main() {
     return -1;
   }
 
+  GLuint vertexObj,arrayObj;
+  
+  simple.drawTriangle(&vertexObj);
+  simple.enableActiveVertexArrayObj(&arrayObj);
+  
+
+  
   
   //2 Tirangles in one 
   GLfloat vertices[] = {
@@ -61,6 +70,7 @@ int main() {
   
   glGenBuffers(1,&vbo);
   glBindBuffer(GL_ARRAY_BUFFER,vbo);
+  
   glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
 
  
@@ -120,6 +130,8 @@ int main() {
   glDeleteShader(vs);
   glDeleteShader(fs);
 
+
+
   //Main Loop
 
    while (!glfwWindowShouldClose(pWindow)) {
@@ -127,12 +139,16 @@ int main() {
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
-
-    glBindVertexArray(vao);
-    //glDrawArrays(GL_TRIANGLES,0,6);
-    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+    glBindVertexArray(arrayObj);
+    glDrawArrays(GL_TRIANGLES,0,3);
     glBindVertexArray(0);
+
+    //glUseProgram(shaderProgram);
+
+    //glBindVertexArray(vao);
+    //glDrawArrays(GL_TRIANGLES,0,6);
+    //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+    //glBindVertexArray(0);
 
     glfwSwapBuffers(pWindow);
   }
