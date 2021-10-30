@@ -33,6 +33,7 @@ link_libraries(
 include_directories( 
    ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/include 
    ${CMAKE_SOURCE_DIR}/libs/glfw/include
+   ${CMAKE_SOURCE_DIR}/libs/glm_lib/
    ${OPENGL_INCLUDE_DIRS}  
    ${GLUT_INCLUDE_DIRS}
  )

@@ -53,19 +53,12 @@ int main() {
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //(shaderProgram);
     customShader.use();
     glBindVertexArray(arrayObj);
     
     glDrawArrays(GL_TRIANGLES,0,3);
     glBindVertexArray(0);
 
-    //glUseProgram(shaderProgram);
-
-    //glBindVertexArray(vao);
-    //glDrawArrays(GL_TRIANGLES,0,6);
-    //glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-    //glBindVertexArray(0);
 
     glfwSwapBuffers(pWindow);
   }
