@@ -36,7 +36,7 @@ const GLchar** SimpleShader::getFragmentShader(int id)
 
 
 //This just draws the triangle and no coloring, simple put only points in space
-void SimpleShader::drawTriangle(GLuint* bufferObject) 
+void SimpleShader::createBufferInGPU(GLuint* bufferObject) 
 {
   //Create new buffer in GPU memory
   glGenBuffers(1,bufferObject);  
@@ -49,7 +49,7 @@ void SimpleShader::drawTriangle(GLuint* bufferObject)
 
 }
 
-void SimpleShader::enableActiveVertexArrayObj(GLuint* obj) 
+void SimpleShader::mapDataToGPU(GLuint* obj) 
 {
   //This is required by core OpenGL
   int vertexId = 0;

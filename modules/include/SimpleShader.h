@@ -18,7 +18,7 @@ const GLchar* vertex1 = R"END(
    }
 )END";
 
-const GLchar* fragment1 = R"END(
+const GLchar *fragment1 = R"END(
    #version 330 core 
    out vec4 frag_color;
    void main()
@@ -31,8 +31,8 @@ public :
    SimpleShader();
    const GLchar** getVertexShader(int id=0);
    const GLchar** getFragmentShader(int id=0);
-   void drawTriangle(GLuint* bufferObject);
-   void enableActiveVertexArrayObj(GLuint* obj);
+   void createBufferInGPU(GLuint* bufferObject);
+   void mapDataToGPU(GLuint* obj);
    void createVertexShader(GLuint& pShader);
    void createFragmentShader(GLuint& pShader);
    void linkShaders(GLuint& shaderProgram,GLuint& vertexShader,GLuint& fragmentShader);

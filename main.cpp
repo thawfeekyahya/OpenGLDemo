@@ -18,6 +18,7 @@ int main() {
 
   MainWindow openglWindow;
   SimpleShader simple;
+  ShaderProgram customShader;
 
   pWindow = openglWindow.initOpenGL();
 
@@ -28,10 +29,10 @@ int main() {
 
   GLuint vertexObj,arrayObj;
   
-  simple.drawTriangle(&vertexObj);
-  simple.enableActiveVertexArrayObj(&arrayObj);
-  
- 
+  simple.createBufferInGPU(&vertexObj);
+  simple.mapDataToGPU(&arrayObj);
+
+  /*
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
   GLuint shaderProgram = glCreateProgram();
@@ -40,6 +41,10 @@ int main() {
   simple.createFragmentShader(fragmentShader);
   
   simple.linkShaders(shaderProgram,vertexShader,fragmentShader);
+  */
+
+  customShader.loadShaders("basic.vert","basic.frag");
+
 
   //Main Loop
 
@@ -48,7 +53,8 @@ int main() {
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
+    //(shaderProgram);
+    customShader.use();
     glBindVertexArray(arrayObj);
     
     glDrawArrays(GL_TRIANGLES,0,3);
@@ -64,7 +70,7 @@ int main() {
     glfwSwapBuffers(pWindow);
   }
 
-  glDeleteProgram(shaderProgram);
+  //glDeleteProgram(shaderProgram);
   glDeleteVertexArrays(1,&arrayObj);
   glDeleteBuffers(1,&vertexObj);
   //glDeleteBuffers(1,&ibo);
