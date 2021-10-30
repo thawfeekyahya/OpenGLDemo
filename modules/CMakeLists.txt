@@ -17,6 +17,13 @@ target_include_directories(${name} PUBLIC ${HDR_DIR}
         ${GLUT_INCLUDE_DIRS}
 )
 
+add_custom_command(
+        TARGET ${name} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_CURRENT_SOURCE_DIR}/shader_programs
+                ${CMAKE_BINARY_DIR}
+)
+
 source_group(TREE ${HDR_DIR} PREFIX "Header Files Intro" FILES ${HDRS})
 
 

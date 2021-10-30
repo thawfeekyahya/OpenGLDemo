@@ -16,8 +16,12 @@ public:
     bool loadShaders(const char* vsFilename, const char* fsFilename);
     void use();
 
+    //void setUniform(const GLchar* name,const glm::vect2& v )
+
 
 private:
-    std::string fileToString(const std::string* filename);
+    std::string fileToString(const std::string& filename);
     void checkCompilerError(GLuint shader,ShaderType type);
+
+    GLuint mHandle;
 };

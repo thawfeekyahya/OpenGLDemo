@@ -1,15 +1,17 @@
 #include "SimpleShader.h"
 #include <iostream>
 
+
 SimpleShader::SimpleShader(){}
 
 
 //Moving this to cpp ,coz of flexlible array issue
 GLfloat triangleVertices[] = {
     // pos1 pos1 pos3 is x y and z and pos4 pos5 pos6 is RGB
-    -0.5f,  0.5f,  0.0f, 
-     0.5f,  0.5f,  0.0f, 
-     0.5f, -0.5f,  0.0f,
+     -0.5f, 0.0f,  0.0f, 
+     0.5f,  0.0f,  0.0f,
+     0.0f,  0.5f,  0.0f,
+     -0.5f,  -0.5f,  0.0f
 };
 
 

@@ -6,6 +6,7 @@
 #include "GLFW/glfw3.h"
 #include "MainWindow.h"
 #include "SimpleShader.h"
+#include "ShaderProgram.h"
 
 //-----------------Global Properites
 
@@ -46,8 +47,10 @@ int main() {
     openglWindow.showFPS();
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
+
     glUseProgram(shaderProgram);
     glBindVertexArray(arrayObj);
+    
     glDrawArrays(GL_TRIANGLES,0,3);
     glBindVertexArray(0);
 
