@@ -32,6 +32,7 @@ int main() {
   simple.createBufferInGPU(&vertexObj);
   simple.mapDataToGPU(&arrayObj);
 
+
   /*
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -55,6 +56,17 @@ int main() {
 
     customShader.use();
     glBindVertexArray(arrayObj);
+
+    GLfloat time = glfwGetTime();
+    GLfloat blueColor = (sin(time) / 2) + 0.05f;
+    customShader.setUniform("vertColor",glm::vec4(0.0f,0.0f,blueColor,1.0f));
+
+    glm::vec2 pos;
+    pos.x = (cos(time) / 2) + 0.05f;
+    pos.y = (sin(time) / 2) + 0.05f;
+    customShader.setUniform("positionOffset",pos);
+
+
     
     glDrawArrays(GL_TRIANGLES,0,3);
     glBindVertexArray(0);

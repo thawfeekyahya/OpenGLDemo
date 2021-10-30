@@ -1,6 +1,10 @@
 #include "ShaderProgram.h"
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
+#include <glm/glm.hpp>
+#include <glm/vec3.hpp> 
+#include <glm/vec4.hpp> 
+#include <glm/vec2.hpp> 
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -47,6 +51,8 @@ bool ShaderProgram::loadShaders(const char* vsFilename, const char* fsFilename) 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
+    mUniformLocations.clear();
+
     return true;
   
 }
@@ -57,9 +63,32 @@ void ShaderProgram::use(){
     }
 }
 
-// void ShaderProgram::setUniform(const GLchar* name,const glm::vect2& v ){
+void ShaderProgram::setUniform(const GLchar* name,const glm::vec2& v) {
+    GLint loc = getUniformLocation(name);
+    glUniform2f(loc,v.x,v.y);
+}
 
-// }
+void ShaderProgram::setUniform(const GLchar* name,const glm::vec3& v) {
+    GLint loc = getUniformLocation(name);
+    glUniform3f(loc,v.x,v.y,v.z);
+}
+
+void ShaderProgram::setUniform(const GLchar* name,const glm::vec4& v) {
+    GLint loc = getUniformLocation(name);
+    glUniform4f(loc,v.x,v.y,v.z,v.w);
+}
+
+GLuint ShaderProgram::getUniformLocation(const GLchar* name) {
+
+    std::map<std::string,GLint>::iterator iter = mUniformLocations.find(name);
+
+
+    if(iter == mUniformLocations.end()) {
+        mUniformLocations[name] = glGetUniformLocation(mHandle,name);
+    }
+
+    return mUniformLocations[name];
+}
 
 std::string ShaderProgram::fileToString(const std::string& filename) {
     std::stringstream stringStream;
