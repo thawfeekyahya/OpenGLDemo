@@ -34,6 +34,7 @@ include_directories(
    ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/include 
    ${CMAKE_SOURCE_DIR}/libs/glfw/include
    ${CMAKE_SOURCE_DIR}/libs/glm_lib/
+   ${CMAKE_SOURCE_DIR}/libs/stb_img
    ${OPENGL_INCLUDE_DIRS}  
    ${GLUT_INCLUDE_DIRS}
  )
