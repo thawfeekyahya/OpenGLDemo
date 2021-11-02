@@ -14,6 +14,18 @@ GLfloat triangleVertices[] = {
      -0.5f,  -0.5f,  0.0f
 };
 
+GLuint indices []  = {
+    0, 1, 2,
+    0, 2, 3
+};
+
+
+GLfloat imageVerticies[] = {
+    -0.5,  0.5, 0.0, 0.0, 0.1,
+     0.5,  0.5, 0.0, 1.0, 1.0,
+     0.5, -0.5, 0.0, 1.0, 0.0,
+    -0.5, -0.5, 0.0, 0.0, 0.0
+};
 
  const GLchar** SimpleShader::getVertexShader(int id) {
 
@@ -45,14 +57,15 @@ void SimpleShader::createBufferInGPU(GLuint* bufferObject)
   glBindBuffer(GL_ARRAY_BUFFER,*bufferObject);
 
   //Take the CPU data ( traingleVertices ) and pass it to the active buffer (based on previous step)
-  glBufferData(GL_ARRAY_BUFFER, sizeof(triangleVertices),triangleVertices,GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(imageVerticies),imageVerticies,GL_STATIC_DRAW);
 
 }
 
 void SimpleShader::mapDataToGPU(GLuint* obj) 
 {
   //This is required by core OpenGL
-  int vertexId = 0;
+  int vertexId1 = 0;
+  int vertexId2 = 1;
   glGenVertexArrays(1,obj);
   glBindVertexArray(*obj);
   
@@ -66,10 +79,15 @@ void SimpleShader::mapDataToGPU(GLuint* obj)
    * @ 0 Offset start
    * @ NULL offset end
    * */
-  glVertexAttribPointer(vertexId,3,GL_FLOAT,GL_FALSE,0,NULL);
+  glVertexAttribPointer(vertexId1,3,GL_FLOAT,GL_FALSE,5*sizeof(GLfloat),NULL);
 
   //enable this vertex array
-  glEnableVertexAttribArray(vertexId); 
+  glEnableVertexAttribArray(vertexId1); 
+  
+  //Tex coord
+  glVertexAttribPointer(vertexId2,2,GL_FLOAT,GL_FALSE,5*sizeof(GLfloat),(GLvoid*)(3*sizeof(GLfloat)));
+  glEnableVertexAttribArray(vertexId2); 
+
 }
 
 
@@ -118,4 +136,12 @@ void SimpleShader::linkShaders(GLuint& shaderProgram,GLuint& vertexShader,GLuint
   glDeleteShader(fragmentShader);
 
 }
+
+void SimpleShader::createIndicesBuffer(GLuint* bufferObject) {
+    glGenBuffers(1,bufferObject);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,*bufferObject);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_STATIC_DRAW);
+  
+}
+
 

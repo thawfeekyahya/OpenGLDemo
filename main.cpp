@@ -1,12 +1,14 @@
 #include <iostream>
 #include <sstream>
 
+#include "stb_image.h"
 #define GLEW_STATIC
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "MainWindow.h"
 #include "SimpleShader.h"
 #include "ShaderProgram.h"
+#include "Texture2D.h"
 
 //-----------------Global Properites
 
@@ -29,8 +31,12 @@ int main() {
 
   GLuint vertexObj,arrayObj;
   
+  GLuint indexObj; // To draw quad // avoid redrawing same index
+  
   simple.createBufferInGPU(&vertexObj);
   simple.mapDataToGPU(&arrayObj);
+  simple.createIndicesBuffer(&indexObj);
+
 
 
   /*
@@ -46,6 +52,10 @@ int main() {
 
   customShader.loadShaders("basic.vert","basic.frag");
 
+  Texture2D texture;
+  const std::string imageName="benz.png";
+  texture.loadTexture(imageName,true);
+
 
   //Main Loop
 
@@ -53,10 +63,13 @@ int main() {
     openglWindow.showFPS();
     glfwPollEvents();
     glClear(GL_COLOR_BUFFER_BIT);
+    
+    texture.bind();
 
     customShader.use();
     glBindVertexArray(arrayObj);
 
+    /*
     GLfloat time = glfwGetTime();
     GLfloat blueColor = (sin(time) / 2) + 0.05f;
     customShader.setUniform("vertColor",glm::vec4(0.0f,0.0f,blueColor,1.0f));
@@ -64,11 +77,11 @@ int main() {
     glm::vec2 pos;
     pos.x = (cos(time) / 2) + 0.05f;
     pos.y = (sin(time) / 2) + 0.05f;
-    customShader.setUniform("positionOffset",pos);
+    customShader.setUniform("positionOffset",pos);*/
 
 
-    
-    glDrawArrays(GL_TRIANGLES,0,3);
+    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
+    //glDrawArrays(GL_TRIANGLES,0,3);
     glBindVertexArray(0);
 
 

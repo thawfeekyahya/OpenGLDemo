@@ -4,6 +4,8 @@ project(OpenGLDemo VERSION 1.0 DESCRIPTION "OpenGL Oreily Tutorial" LANGUAGES CX
 
 message("-------------------------------${PROJECT_NAME}----------------------------- \n")
 
+set(CMAKE_BUILD_TYPE "Debug")
+
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 11)
@@ -38,6 +40,8 @@ include_directories(
    ${OPENGL_INCLUDE_DIRS}  
    ${GLUT_INCLUDE_DIRS}
  )
+
+file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
 add_executable(${PROJECT_NAME} main.cpp)
 

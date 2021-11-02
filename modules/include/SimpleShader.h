@@ -32,12 +32,15 @@ public :
    const GLchar** getVertexShader(int id=0);
    const GLchar** getFragmentShader(int id=0);
    void createBufferInGPU(GLuint* bufferObject);
+   void createIndicesBuffer(GLuint* bufferObject);
    void mapDataToGPU(GLuint* obj);
    void createVertexShader(GLuint& pShader);
    void createFragmentShader(GLuint& pShader);
    void linkShaders(GLuint& shaderProgram,GLuint& vertexShader,GLuint& fragmentShader);
    
 };
+
+
 
 
 

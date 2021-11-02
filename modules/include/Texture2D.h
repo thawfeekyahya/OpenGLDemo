@@ -8,12 +8,11 @@ class Texture2D {
 public:
     Texture2D();
     ~Texture2D();
-    void loadTexture(const std::string& filename, bool genericMipMaps = true);
+    bool loadTexture(const std::string& filename, bool generateMipMaps = true);
     void bind(GLuint textUint=0);
 
 private:
-   GLuint* mTexture;
-
+   GLuint mTexture;
 };
 
 
