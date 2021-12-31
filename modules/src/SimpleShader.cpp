@@ -27,7 +27,7 @@ GLfloat imageVerticies[] = {
     -0.5, -0.5, 0.0, 0.0, 0.0
 };
 
- const GLchar** SimpleShader::getVertexShader(int id) {
+const GLchar** SimpleShader::getVertexShader(int id) {
 
     switch(id) {
         case 0:
@@ -38,11 +38,11 @@ GLfloat imageVerticies[] = {
 
 const GLchar** SimpleShader::getFragmentShader(int id) 
 {
-    switch(id) {
-        case 0:
-        return &fragment1;
-        break;
-    }
+  switch(id) {
+      case 0:
+      return &fragment1;
+      break;
+  }
    
 }
 
@@ -76,8 +76,8 @@ void SimpleShader::mapDataToGPU(GLuint* obj)
    * @ 3 , how many data in a stride
    * @ GL_FLOAT type of data
    * @ GL_FALSE shoudl normalize 
-   * @ 0 Offset start
-   * @ NULL offset end
+   * @ 5*sizeof(GLfloat) Specifies the byte offset between consecutive generic vertex attributes
+   * @ NULL Specifies a offset of the first component
    * */
   glVertexAttribPointer(vertexId1,3,GL_FLOAT,GL_FALSE,5*sizeof(GLfloat),NULL);
 
@@ -141,7 +141,6 @@ void SimpleShader::createIndicesBuffer(GLuint* bufferObject) {
     glGenBuffers(1,bufferObject);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,*bufferObject);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_STATIC_DRAW);
-  
 }
 
 

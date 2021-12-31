@@ -149,3 +149,32 @@ void ShaderProgram::checkCompilerError(GLuint shader,ShaderType type) {
     }
 
 }
+
+void ShaderProgram::mapDataToGPU(GLuint* obj) 
+{
+  //This is required by core OpenGL
+  int vertexId1 = 0;
+  int vertexId2 = 1;
+  glGenVertexArrays(1,obj);
+  glBindVertexArray(*obj);
+  
+  //VertexAttribPointer is used to describe how data is laid out in the vertex array 
+  // <triangleVertices> is array of 9 elements ,but its actually represented as 3 vertex point of a triange
+  /**
+   * @vertexID unique id and this is referenced in the fragment shader code
+   * @ 3 , how many data in a stride
+   * @ GL_FLOAT type of data
+   * @ GL_FALSE shoudl normalize 
+   * @ 5*sizeof(GLfloat) Specifies the byte offset between consecutive generic vertex attributes
+   * @ NULL Specifies a offset of the first component
+   * */
+  glVertexAttribPointer(vertexId1,3,GL_FLOAT,GL_FALSE,5*sizeof(GLfloat),NULL);
+
+  //enable this vertex array
+  glEnableVertexAttribArray(vertexId1); 
+  
+  //Tex coord
+  glVertexAttribPointer(vertexId2,2,GL_FLOAT,GL_FALSE,5*sizeof(GLfloat),(GLvoid*)(3*sizeof(GLfloat)));
+  glEnableVertexAttribArray(vertexId2); 
+
+}

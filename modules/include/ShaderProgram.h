@@ -26,6 +26,8 @@ public:
     void setUniform(const GLchar* name,const glm::vec3& v);
     void setUniform(const GLchar* name,const glm::vec4& v);
 
+    void mapDataToGPU(GLuint* obj);
+
 private:
     std::string fileToString(const std::string& filename);
     void checkCompilerError(GLuint shader,ShaderType type);
