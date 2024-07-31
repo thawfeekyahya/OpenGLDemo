@@ -5,80 +5,104 @@
 #define GLEW_STATIC
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
-#include "MainWindow.h"
-#include "SimpleShader.h"
-#include "ShaderProgram.h"
-#include "Texture2D.h"
-#include "ShaderData.h"
 
-//-----------------Global Properites
+using namespace std;
 
-GLFWwindow* pWindow = NULL;
-void createShader(SimpleShader& simpleShader,GLuint& vertexShader,GLuint& fragmentShader,GLuint& shaderProgram);
+void drawTriangle(GLFWwindow* window) {
 
+    GLfloat points[] = {
+        0.0f,0.5f,0.0f,
+        0.5f,-0.5f,0.0f,
+        -0.5f,-0.5f,0.0f
+    };
+
+    const char* vertex_shader = R"( 
+        #version 410
+        in vec3 vp;
+        void main() {
+          gl_Position = vec4(vp.x,vp.y-0.5,vp.z,1.0);
+        };
+        )";
+
+    const char* frag_shader = R"(
+        #version 410
+        out vec4 frag_color;
+        void main() {
+            frag_color = vec4(0.5,0.0,0.5,1.0);
+        };
+    )";
+
+    GLuint vbo = 0;
+    glGenBuffers(1,&vbo);
+    glBindBuffer(GL_ARRAY_BUFFER,vbo);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(points),points,GL_STATIC_DRAW);
+
+    GLuint vao = 0;
+    glGenVertexArrays(1,&vao);
+    glBindVertexArray(vao);
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER,vbo);
+    glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
+
+    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vs,1,&vertex_shader,NULL);
+    glCompileShader(vs);
+
+    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fs,1,&frag_shader,NULL);
+    glCompileShader(fs);
+
+    GLuint shader_program = glCreateProgram();
+
+    glAttachShader(shader_program,fs);
+    glAttachShader(shader_program,vs);
+
+    glLinkProgram(shader_program);
+
+    while(!glfwWindowShouldClose(window)) {
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+        glUseProgram(shader_program);
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLES,0,3);
+        glfwPollEvents();
+        glfwSwapBuffers(window);
+    }
+    
+}
 
 int main() {
 
-  MainWindow openglWindow;
-  ShaderProgram customShader;
-  ShaderData data;
+    if (!glfwInit()) {
+        cerr<<"Could not launch GLFW3A"<<endl;
+        return 1;
+    } 
 
-  pWindow = openglWindow.initOpenGL();
+    GLFWwindow* window = glfwCreateWindow(640,480,"Hello Traingle",NULL,NULL);
 
-  if (!pWindow) {
-    std::cerr << " GLFW intialization failed"<<std::endl;
-    return -1;
-  }
+    if(!window) {
+        cerr<<"Could not open window GLFW3 Window"<<endl;
+        glfwTerminate();
+        return 1;
+    }
+    glfwMakeContextCurrent(window);
+    glewExperimental = GL_TRUE;
+    glewInit();
 
-  GLuint vertexData,arrayData,indicesData;
+    const GLubyte* renderer = glGetString(GL_RENDERER);
+    const GLubyte* version = glGetString(GL_VERSION);
 
-  data.create(&vertexData,&arrayData,&indicesData);
+    //--------------------------------------------------Check-Version 
+    cout<<"Renderer-> "<<renderer<<endl;
+    cout<<"Supported version-> "<<version<<endl;
 
-  customShader.loadShaders("basic.vert","basic.frag");
-
-  Texture2D texture;
-  const std::string imageName="benz.png";
-  texture.loadTexture(imageName,true);
-
-
-
-  //Main Loop
-
-   while (!glfwWindowShouldClose(pWindow)) {
-    openglWindow.showFPS();
-    glfwPollEvents();
-    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     
-    texture.bind();
-    customShader.use();
-    glBindVertexArray(arrayData);
+    drawTriangle(window);
 
-    /*
-    GLfloat time = glfwGetTime();
-    GLfloat blueColor = (sin(time) / 2) + 0.05f;
-    customShader.setUniform("vertColor",glm::vec4(0.0f,0.0f,blueColor,1.0f));
-
-    glm::vec2 pos;
-    pos.x = (cos(time) / 2) + 0.05f;
-    pos.y = (sin(time) / 2) + 0.05f;
-    customShader.setUniform("positionOffset",pos);*/
+    glfwTerminate();
 
 
-    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-    //glDrawArrays(GL_TRIANGLES,0,3);
-    glBindVertexArray(0);
-
-
-    glfwSwapBuffers(pWindow);
-  }
-
-  //glDeleteProgram(shaderProgram);
-  // glDeleteVertexArrays(1,&arrayObj);
-  // glDeleteBuffers(1,&vertexObj);
-  //glDeleteBuffers(1,&ibo);
-
-  glfwTerminate();
-  return 0;
-	
+    return 0;
 }
 
