@@ -8,14 +8,14 @@ set(CMAKE_BUILD_TYPE "Debug")
 
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 list(APPEND CHAPTERS modules)
 
 
-#foreach(chapter ${CHAPTERS})
-#	add_subdirectory(${chapter})
-#endforeach()
+foreach(chapter ${CHAPTERS})
+	add_subdirectory(${chapter})
+endforeach()
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
@@ -28,25 +28,21 @@ target_link_libraries(${PROJECT_NAME}
    ${CMAKE_SOURCE_DIR}/libs/build_glfw/src/libglfw3.a
    ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/lib/libGLEW.a
    ${OPENGL_LIBRARIES} 
-   ${GLUT_LIBRARY}
    ${CMAKE_THREAD_LIBS_INIT}
    ${CMAKE_DL_LIBS}
 )  
 
 
+
 target_include_directories(${PROJECT_NAME} PUBLIC
    ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/include 
    ${CMAKE_SOURCE_DIR}/libs/glfw/include
-   ${CMAKE_SOURCE_DIR}/libs/glm_lib/
-   ${CMAKE_SOURCE_DIR}/libs/stb_img
    ${OPENGL_INCLUDE_DIRS}  
    ${GLUT_INCLUDE_DIRS}
  )
 
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
 
-
-
-#target_link_libraries(${PROJECT_NAME} ${CHAPTERS})
+target_link_libraries(${PROJECT_NAME} ${CHAPTERS})
 
 

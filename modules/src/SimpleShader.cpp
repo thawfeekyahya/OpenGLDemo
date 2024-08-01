@@ -34,6 +34,8 @@ const GLchar** SimpleShader::getVertexShader(int id) {
         return &vertex1;
         break;
     }
+
+    return &vertex1;
 }
 
 const GLchar** SimpleShader::getFragmentShader(int id) 
@@ -43,6 +45,8 @@ const GLchar** SimpleShader::getFragmentShader(int id)
       return &fragment1;
       break;
   }
+
+  return &fragment1;
    
 }
 

@@ -10,6 +10,8 @@ get_filename_component(name ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
 add_library(${name} ${SRCS})
 
+find_package(OpenGL REQUIRED)
+
 target_include_directories(${name} PUBLIC ${HDR_DIR}
         ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/include 
         ${CMAKE_SOURCE_DIR}/libs/glfw/include
@@ -18,6 +20,15 @@ target_include_directories(${name} PUBLIC ${HDR_DIR}
         ${OPENGL_INCLUDE_DIRS}  
         ${GLUT_INCLUDE_DIRS}
 )
+
+target_link_libraries(${name}
+   ${CMAKE_SOURCE_DIR}/libs/build_glfw/src/libglfw3.a
+   ${CMAKE_SOURCE_DIR}/libs/glew-2.1.0/lib/libGLEW.a
+   ${OPENGL_LIBRARIES} 
+   ${CMAKE_THREAD_LIBS_INIT}
+   ${CMAKE_DL_LIBS}
+)  
+
 
 add_custom_command(
         TARGET ${name} POST_BUILD
