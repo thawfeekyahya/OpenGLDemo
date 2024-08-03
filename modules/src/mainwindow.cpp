@@ -6,11 +6,29 @@
 #include "GLFW/glfw3.h"
 #include <string>
 #include <iostream>
+#include <functional> 
 
 using namespace std;
 
 MainWindow::MainWindow() {
 
+}
+
+
+void MainWindow::loop(std::function<void()> func,GLFWwindow* window) {
+
+    while(!glfwWindowShouldClose(window)) {
+       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+       
+       func();
+
+       glfwPollEvents();
+       glfwSwapBuffers(window);
+       
+       if (GLFW_PRESS == glfwGetKey(window,GLFW_KEY_ESCAPE)) {
+           glfwSetWindowShouldClose(window,1);
+       }
+    }    
 }
 
 
@@ -34,6 +52,7 @@ int MainWindow::initialize() {
 
 
 GLFWwindow* MainWindow::createWindow(unsigned width,unsigned height,std::string title) {
+
     m_window = glfwCreateWindow(width,height,title.c_str(),NULL,NULL);
     m_width = width;
     m_height = height;
@@ -53,7 +72,7 @@ void MainWindow::makeEnv(GLFWwindow* window) {
 
    glfwMakeContextCurrent(window);
    glewExperimental = GL_TRUE;
-   glewInit();
+   glewInit(); // Init GLEW 
    
        
    glEnable(GL_DEPTH_TEST);

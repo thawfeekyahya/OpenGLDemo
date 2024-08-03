@@ -2,7 +2,7 @@
 
 OpenGL is not a library itself; instead, it is a specification of APIs. These APIs must be implemented by GPU hardware manufacturers.
 
-###GLuint
+### GLuint
 
 The Graphics Library `unsigned int` is simply a binding on top of the standard `unsigned int`, ensuring compatibility across different operating systems. Nearly everything in OpenGL is associated with a corresponding `GLuint` ID.
 
@@ -35,5 +35,15 @@ Vertex Attribute Objects (VAOs) in OpenGL are objects that encapsulate the *stat
 They store the configuration required to describe how vertex data is stored in Vertex Buffer Objects (VBOs) and how this data is fed to the vertex shader.
 
 VAOs make it easier to manage multiple vertex attribute configurations and switch between them efficiently.
+
+### GL's state machine
+
+The GL operates based on a state machine, so setting a state can affect globally in the program
+
+In Open state can be mainly divided into 3 categories
+
+1. binding  ( for buffers of data )
+2. enabling ( for rendering mode )
+3. using    ( for shaders programmes)
 
 

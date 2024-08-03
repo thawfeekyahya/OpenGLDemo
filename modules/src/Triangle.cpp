@@ -33,48 +33,39 @@ void Triangle::drawTriangle(GLFWwindow* window) {
         };
     )";
 
-    GLuint vbo = 0;
+    vbo = 0;
     glGenBuffers(1,&vbo);
     glBindBuffer(GL_ARRAY_BUFFER,vbo);
     glBufferData(GL_ARRAY_BUFFER,sizeof(points),points,GL_STATIC_DRAW);
 
-    GLuint vao = 0;
+    vao = 0;
     glGenVertexArrays(1,&vao);
     glBindVertexArray(vao);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
 
-    GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+    vs = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vs,1,&vertex_shader,NULL);
     glCompileShader(vs);
 
-    GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
+    fs = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fs,1,&frag_shader,NULL);
     glCompileShader(fs);
 
-    GLuint shader_program = glCreateProgram();
+    shader_program = glCreateProgram();
 
     glAttachShader(shader_program,fs);
     glAttachShader(shader_program,vs);
 
     glLinkProgram(shader_program);
     
+}
 
-    while(!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+void Triangle::loopTriangle() {
         glUseProgram(shader_program);
         glBindVertexArray(vao);
         glDrawArrays(GL_TRIANGLES,0,3);
-        glfwPollEvents();
-        glfwSwapBuffers(window);
         
-        if (GLFW_PRESS == glfwGetKey(window,GLFW_KEY_ESCAPE)) {
-            glfwSetWindowShouldClose(window,1);
-	}
-	
-	
-    }
-    
 }
 
 Triangle::Triangle() {

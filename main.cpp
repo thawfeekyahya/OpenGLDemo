@@ -38,9 +38,15 @@ int main() {
     Triangle t;    
     t.drawTriangle(window);
     
+    auto looper = bind(&Triangle::loopTriangle,&t);
+    
+    w.loop(looper,window);
+    
+    
     Log l;
-    l.restart_gl_log("HI","Hello",1,2,3,22.5);
-    l.appendLog("now this is another message");
+    l.appendLog("now this is another message 1");
+    l.appendLog("now this is another message 2",2);
+    l.appendLog("now this is another message 3",3);
 
 
     int v;
