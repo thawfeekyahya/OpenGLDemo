@@ -59,6 +59,8 @@ void Triangle::drawTriangle(GLFWwindow* window) {
 
     glLinkProgram(shader_program);
     
+
+    
 }
 
 void Triangle::loopTriangle() {

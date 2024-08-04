@@ -9,6 +9,8 @@
 #include "modules/include/Triangle.h"
 #include "modules/include/mainwindow.h"
 #include "modules/include/Log.h"
+#include "modules/include/square.h"
+
 #include <chrono>
 
 using namespace std;
@@ -35,13 +37,18 @@ int main() {
 
     w.makeEnv(window);
 
-    Triangle t;    
-    t.drawTriangle(window);
+//    Triangle t;    
+//    t.drawTriangle(window);
+//    
+//    auto looper = bind(&Triangle::loopTriangle,&t);
+//    
+//    w.loop(looper,window);
     
-    auto looper = bind(&Triangle::loopTriangle,&t);
-    
+
+    Square s;
+    s.drawSquare(window);
+    auto looper = bind(&Square::loop,&s);
     w.loop(looper,window);
-    
     
     Log l;
     l.appendLog("now this is another message 1");
