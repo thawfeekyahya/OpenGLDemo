@@ -3,6 +3,7 @@
 #define GLEW_STATIC
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
+#include <cmath>
 #include "square.h"
 #include "debug.h"
 
@@ -37,10 +38,13 @@ void Square::drawSquare(GLFWwindow* window) {
         #version 410
         layout(location = 0) in vec3 vp;
         layout(location = 1) in vec3 color;
+        
+        uniform mat4 matrix; 
         out vec3 color_data;
+        
         void main() {
             color_data = color;
-            gl_Position = vec4(vp.x,vp.y,vp.z,1.0);
+            gl_Position =  matrix * vec4(vp,1.0);
         };
     )";
 
@@ -52,6 +56,8 @@ void Square::drawSquare(GLFWwindow* window) {
             frag_color = vec4(color_data,1.0);
         };
     )";
+    
+    
 
 
     //Generate and bind vertex data
@@ -98,11 +104,39 @@ void Square::drawSquare(GLFWwindow* window) {
 
     glLinkProgram(shader_program);
     
+    
+    
+    matrix_location = glGetUniformLocation(shader_program,"matrix");
+    
+    
+    glUniformMatrix4fv(matrix_location,1,GL_FALSE,matrix);
+    
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    //glFrontFace(GL_CW);
 }
 
 
 void Square::loop() {
+    
+    using namespace std;
+
+    static double prev_sec = glfwGetTime();
+    
+    double curr_sec = glfwGetTime();
+    double elapsed_sec = curr_sec - prev_sec;
+    prev_sec = curr_sec;
+
+    if (fabs(lastPos)> 1.0f) {
+       speed =- speed; 
+    }
+
+    matrix[12] = elapsed_sec * speed + lastPos;
+    lastPos = matrix[12];
+    glUniformMatrix4fv(matrix_location,1,GL_FALSE,matrix);
+
     glUseProgram(shader_program);
+
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES,0,6);
 }

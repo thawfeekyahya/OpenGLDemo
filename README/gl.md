@@ -91,9 +91,15 @@ In Open state can be mainly divided into 3 categories
 
 20. glUniformMatrix{1234}{fd}v() -> set the value of a uniform matrix of 2x2 , 3x3 and 4x4 
 
-## Interpolation
+### Interpolation
 
-In OpenGL when we send the data from one shader pipeline to the next the values are going to be interpolated between the vertices, so the fragments between each vertices going to get different values based on their position.
-If we wanted to have a constant value we need to use **uniform** variables for that.
+In OpenGL when we send the data from one shader pipeline to the next the values are going to be interpolated between the vertices, so the fragments between each vertices going to get different values based on their position. If we wanted to have a constant value we need to use **uniform** variables for that.
+
+
+### Culling functions
+
+1. glEnable(GL_CULL_FACE)
+2. glCullFace(GL_BACK)
+3. glFrontFace(GL_CW)
 
 
