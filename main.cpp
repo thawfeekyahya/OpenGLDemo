@@ -10,11 +10,12 @@
 #include "modules/include/mainwindow.h"
 #include "modules/include/Log.h"
 #include "modules/include/square.h"
+#include "modules/include/CameraMovement.h"
 
 #include <chrono>
 
-using namespace std;
 
+using namespace std;
 
 int main() {
 
@@ -37,17 +38,10 @@ int main() {
 
     w.makeEnv(window);
 
-//    Triangle t;    
-//    t.drawTriangle(window);
-//    
-//    auto looper = bind(&Triangle::loopTriangle,&t);
-//    
-//    w.loop(looper,window);
     
-
-    Square s;
-    s.drawSquare(window);
-    auto looper = bind(&Square::loop,&s);
+    CameraMovement s;
+    s.draw(window);
+    auto looper = bind(&CameraMovement::loop,&s);
     w.loop(looper,window);
     
     Log l;

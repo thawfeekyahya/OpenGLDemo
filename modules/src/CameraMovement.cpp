@@ -1,5 +1,4 @@
 
-
 #define GLEW_STATIC
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
@@ -7,11 +6,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform2.hpp>
-#include "square.h"
 #include "debug.h"
+#include "CameraMovement.h" 
 
-
-Square::Square() {
+CameraMovement::CameraMovement() {
 
       
       model = glm::mat4(1.0f);
@@ -19,8 +17,6 @@ Square::Square() {
       //Projection matrix on screen
       proj = glm::perspective (viewAngle,aspect,nearDist,farDist);
 
-      //Model matrix
-      model = glm::rotate(model,glm::radians(0.0f),glm::vec3(0.0f,1.0f,0.0));
 
       //Camera Position
       //Camera target position
@@ -33,16 +29,58 @@ Square::Square() {
          );
 }
 
-void Square::draw(GLFWwindow* window) {
+void CameraMovement::draw(GLFWwindow* window) {
 
     GLfloat points[] = {
-       -0.5,0.5,0.0,  // Cordinates for the first triangle
+	    
+       -0.5,0.5,0.0,  // Cordinates for the A triangle
        -0.5,-0.5,0.0,  
         0.5,-0.5,0.0,  
         
         -0.5,0.5,0.0, 
-        0.5,0.5,0.0,  // Cordinates for the second triangle
-        0.5,-0.5,0.0
+        0.5,0.5,0.0,  // Cordinates for the B triangle
+        0.5,-0.5,0.0,
+
+        
+        0.5,-0.5,0.0,  
+        0.5,-0.5,0.5,  // Cordinates for the C triangle
+        0.5,0.5,0.5,  
+        
+        0.5,-0.5,0.0, 
+        0.5,0.5,0.0,  // Cordinates for the D triangle
+        0.5,0.5,0.5,
+	
+       -0.5,0.5,0.5,  // Cordinates for the E triangle
+        0.5,0.5,0.5,  
+       -0.5,0.5,0.0,  
+        
+        -0.5,0.5,0.0, 
+        0.5,0.5,0.0,  // Cordinates for the F triangle
+        0.5,0.5,0.5,
+		
+       -0.5,-0.5,0.0,  // Cordinates for the G triangle
+       -0.5,0.5,0.0,  
+       -0.5,0.5,0.5,  
+        
+        -0.5,-0.5,0.5, 
+        -0.5,0.5,0.5,  // Cordinates for the H triangle
+        -0.5,-0.5,0.0,
+
+       -0.5,-0.5,0.0,  // Cordinates for the I triangle
+       0.5,-0.5,0.0,  
+       0.5,-0.5,0.5,  
+        
+        0.5,-0.5,0.5, 
+       -0.5,-0.5,0.5,  // Cordinates for the J triangle
+       -0.5,-0.5,0.0,
+		
+       -0.5,0.5,0.5,  // Cordinates for the K triangle
+       -0.5,-0.5,0.5,  
+        0.5,-0.5,0.5,  
+        
+        -0.5,0.5,0.5, 
+        0.5,0.5,0.5,  // Cordinates for the L triangle
+        0.5,-0.5,0.5
     };
 
 
@@ -50,12 +88,53 @@ void Square::draw(GLFWwindow* window) {
     GLfloat colors[] = {
 
         1.0,0.0,0.0,
-        0.0,1.0,0.0,
-        0.0,0.0,1.0,
+        1.0,0.0,0.0,
+        1.0,0.0,0.0,
         
         1.0,0.0,0.0,
+        1.0,0.0,0.0,
+        1.0,0.0,0.0,
+
+        
         0.0,1.0,0.0,
-        0.0,0.0,1.0
+        0.0,1.0,0.0,
+        0.0,1.0,0.0,
+        
+        0.0,1.0,0.0,
+        0.0,1.0,0.0,
+        0.0,1.0,0.0,
+
+        0.0,0.0,1.0,
+        0.0,0.0,1.0,
+        0.0,0.0,1.0,
+        
+        0.0,0.0,1.0,
+        0.0,0.0,1.0,
+        0.0,0.0,1.0,
+
+        1.0,1.0,0.0,
+        1.0,1.0,0.0,
+        1.0,1.0,0.0,
+        
+        1.0,1.0,0.0,
+        1.0,1.0,0.0,
+        1.0,1.0,0.0,
+
+        1.0,0.0,1.0,
+        1.0,0.0,1.0,
+        1.0,0.0,1.0,
+        
+        1.0,0.0,1.0,
+        1.0,0.0,1.0,
+        1.0,0.0,1.0,
+
+        0.0,1.0,1.0,
+        0.0,1.0,1.0,
+        0.0,1.0,1.0,
+        
+        0.0,1.0,1.0,
+        0.0,1.0,1.0,
+        0.0,1.0,1.0
     };
     
     const char* vertex_shader = R"(
@@ -144,7 +223,7 @@ void Square::draw(GLFWwindow* window) {
 }
 
 
-void Square::loop() {
+void CameraMovement::loop() {
     
     using namespace std;
 
@@ -155,25 +234,17 @@ void Square::loop() {
     double elapsed_sec = curr_sec - prev_sec;
     prev_sec = curr_sec;
 
-    //if (fabs(lastPos)> 1.0f) {
-       speed += 0.01; 
-    //}
+    speed += 0.01; 
 
     double angle =  elapsed_sec * speed + lastPos;
 
-    /*
-    matrix[2][3] =  elapsed_sec * speed + lastPos;
-    matrix[0][0] =  cos(speed);
-    matrix[0][1] =  -sin(speed);
-    matrix[1][3] =  sin(speed);
-    matrix[2][2] =  cos(speed);
 
-    lastPos = matrix[2][3];
-    */
-
-    model[0][0] = cos(speed);
-    model[1][1] = sin(speed);
+   // model[0][0] = cos(speed);
+   // model[1][1] = sin(speed);
     //Camera projection
+
+     //Model matrix
+     model = glm::rotate(model,glm::radians(0.5f),glm::vec3(0.5f,1.0f,0.0));
     
     mvp = proj * view * model;
     glUniformMatrix4fv(mvp_location,1,GL_FALSE,&mvp[0][0]);
@@ -184,5 +255,5 @@ void Square::loop() {
     glUseProgram(shader_program);
 
     glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES,0,6);
+    glDrawArrays(GL_TRIANGLES,0,36);
 }
