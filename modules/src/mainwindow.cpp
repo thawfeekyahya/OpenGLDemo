@@ -14,6 +14,13 @@ MainWindow::MainWindow() {
 
 }
 
+unsigned MainWindow::getWidth() const {
+    return m_width;
+}
+
+unsigned MainWindow::getHeight() const {
+    return m_height;
+}
 
 void MainWindow::loop(std::function<void()> func,GLFWwindow* window) {
 

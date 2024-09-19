@@ -16,6 +16,9 @@ class MainWindow {
            void glfw_windowSize_callback(GLFWwindow* window,unsigned width,unsigned height);
            void glfw_frameBuffer_callback(GLFWwindow* window,unsigned width,unsigned height);
            void loop(std::function<void()> func,GLFWwindow* window);
+
+           unsigned getWidth() const;
+           unsigned getHeight() const;
     private:
          GLFWwindow* m_window = nullptr;
          unsigned m_width;

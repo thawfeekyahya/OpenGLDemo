@@ -4,27 +4,46 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform2.hpp>
 #include "square.h"
 #include "debug.h"
 
+
 Square::Square() {
 
-}
+      
+      model = glm::mat4(1.0f);
 
+      //Projection matrix on screen
+      proj = glm::perspective (viewAngle,aspect,nearDist,farDist);
+
+      //Model matrix
+      model = glm::rotate(model,glm::radians(0.0f),glm::vec3(0.0f,1.0f,0.0));
+
+      //Camera Position
+      //Camera target position
+      //Camera upvector (specify which side is up)
+      view = glm::lookAt( glm::vec3(0.0,0.0,3.0),glm::vec3(0.0,0.0,0.0), glm::vec3(0.0,1.0,0.0) );
+}
 
 void Square::drawSquare(GLFWwindow* window) {
 
     GLfloat points[] = {
-       -0.5,0.5,0.0,
-       -0.5,-0.5,0.0,
-        0.5,-0.5,0.0,
+       -0.5,0.5,0.0,  // Cordinates for the first triangle
+       -0.5,-0.5,0.0,  
+        0.5,-0.5,0.0,  
         
-        -0.5,0.5,0.0,
-        0.5,0.5,0.0,
+        -0.5,0.5,0.0, 
+        0.5,0.5,0.0,  // Cordinates for the second triangle
         0.5,-0.5,0.0
     };
-    
+
+
+
     GLfloat colors[] = {
+
         1.0,0.0,0.0,
         0.0,1.0,0.0,
         0.0,0.0,1.0,
@@ -45,6 +64,7 @@ void Square::drawSquare(GLFWwindow* window) {
         void main() {
             color_data = color;
             gl_Position =  matrix * vec4(vp,1.0);
+
         };
     )";
 
@@ -105,11 +125,13 @@ void Square::drawSquare(GLFWwindow* window) {
     glLinkProgram(shader_program);
     
     
-    
+    //Get the uniform variable location from GLSL 
     matrix_location = glGetUniformLocation(shader_program,"matrix");
+
+
     
-    
-    glUniformMatrix4fv(matrix_location,1,GL_FALSE,matrix);
+   //Assign the value from CPU (matrix) to the GPU (GLSL) variable via location
+    //glUniformMatrix4fv(matrix_location,1,GL_FALSE,matrix);
     
     //glEnable(GL_CULL_FACE);
     //glCullFace(GL_BACK);
@@ -121,19 +143,34 @@ void Square::loop() {
     
     using namespace std;
 
+    /*
     static double prev_sec = glfwGetTime();
     
     double curr_sec = glfwGetTime();
     double elapsed_sec = curr_sec - prev_sec;
     prev_sec = curr_sec;
 
-    if (fabs(lastPos)> 1.0f) {
-       speed =- speed; 
-    }
+    //if (fabs(lastPos)> 1.0f) {
+       speed += 0.01; 
+    //}
 
-    matrix[12] = elapsed_sec * speed + lastPos;
-    lastPos = matrix[12];
-    glUniformMatrix4fv(matrix_location,1,GL_FALSE,matrix);
+    double angle =  elapsed_sec * speed + lastPos;
+
+    matrix[2][3] =  elapsed_sec * speed + lastPos;
+    matrix[0][0] =  cos(speed);
+    matrix[0][1] =  -sin(speed);
+    matrix[1][3] =  sin(speed);
+    matrix[2][2] =  cos(speed);
+
+    lastPos = matrix[2][3];
+    */
+    //Camera projection
+    
+    mvp = proj * view * model;
+    glUniformMatrix4fv(matrix_location,1,GL_FALSE,&mvp[0][0]);
+
+   //Assign the value from CPU (matrix) to the GPU (GLSL) variable via location
+   //glUniformMatrix4fv(matrix_location,1,GL_FALSE,&matrix[0][0]);
 
     glUseProgram(shader_program);
 
