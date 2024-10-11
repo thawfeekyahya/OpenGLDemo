@@ -7,12 +7,21 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform2.hpp>
 #include "debug.h"
+#include "shaderLoader.h"
 #include "CameraMovement.h" 
 
 CameraMovement::CameraMovement() {
 
       
+      windowSize = glm::vec2(640,480);
+
+
       model = glm::mat4(1.0f);
+
+      glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.5f));
+      // Apply the translation to the model matrix
+      
+      model = translation * model;
 
       //Projection matrix on screen
       proj = glm::perspective (viewAngle,aspect,nearDist,farDist);
@@ -31,6 +40,7 @@ CameraMovement::CameraMovement() {
 
 void CameraMovement::draw(GLFWwindow* window) {
 
+    mWindow = window;
     GLfloat points[] = {
 	    
        -0.5,0.5,0.0,  // Cordinates for the A triangle
@@ -43,44 +53,44 @@ void CameraMovement::draw(GLFWwindow* window) {
 
         
         0.5,-0.5,0.0,  
-        0.5,-0.5,0.5,  // Cordinates for the C triangle
-        0.5,0.5,0.5,  
+        0.5,-0.5,1.0,  // Cordinates for the C triangle
+        0.5,0.5,1.0,  
         
         0.5,-0.5,0.0, 
         0.5,0.5,0.0,  // Cordinates for the D triangle
-        0.5,0.5,0.5,
+        0.5,0.5,1.0,
 	
-       -0.5,0.5,0.5,  // Cordinates for the E triangle
-        0.5,0.5,0.5,  
+       -0.5,0.5,1.0,  // Cordinates for the E triangle
+        0.5,0.5,1.0,  
        -0.5,0.5,0.0,  
         
         -0.5,0.5,0.0, 
         0.5,0.5,0.0,  // Cordinates for the F triangle
-        0.5,0.5,0.5,
+        0.5,0.5,1.0,
 		
        -0.5,-0.5,0.0,  // Cordinates for the G triangle
        -0.5,0.5,0.0,  
-       -0.5,0.5,0.5,  
+       -0.5,0.5,1.0,  
         
-        -0.5,-0.5,0.5, 
-        -0.5,0.5,0.5,  // Cordinates for the H triangle
+        -0.5,-0.5,1.0, 
+        -0.5,0.5,1.0,  // Cordinates for the H triangle
         -0.5,-0.5,0.0,
 
        -0.5,-0.5,0.0,  // Cordinates for the I triangle
        0.5,-0.5,0.0,  
-       0.5,-0.5,0.5,  
+       0.5,-0.5,1.0,  
         
-        0.5,-0.5,0.5, 
-       -0.5,-0.5,0.5,  // Cordinates for the J triangle
+        0.5,-0.5,1.0, 
+       -0.5,-0.5,1.0,  // Cordinates for the J triangle
        -0.5,-0.5,0.0,
 		
-       -0.5,0.5,0.5,  // Cordinates for the K triangle
-       -0.5,-0.5,0.5,  
-        0.5,-0.5,0.5,  
+       -0.5,0.5,1.0,  // Cordinates for the K triangle
+       -0.5,-0.5,1.0,  
+        0.5,-0.5,1.0,  
         
-        -0.5,0.5,0.5, 
-        0.5,0.5,0.5,  // Cordinates for the L triangle
-        0.5,-0.5,0.5
+        -0.5,0.5,1.0, 
+        0.5,0.5,1.0,  // Cordinates for the L triangle
+        0.5,-0.5,1.0
     };
 
 
@@ -137,33 +147,20 @@ void CameraMovement::draw(GLFWwindow* window) {
         0.0,1.0,1.0
     };
     
-    const char* vertex_shader = R"(
-        #version 410
-        layout(location = 0) in vec3 vp;
-        layout(location = 1) in vec3 color;
-        
-        uniform mat4 mvp; 
-        out vec3 color_data;
-        
-        void main() {
-            color_data = color;
-            gl_Position =   mvp * vec4(vp,1.0);
 
-        };
-    )";
+    ShaderLoader loader("assets/shaders/default.vert");
 
-    const char* frag_shader = R"(
-        #version 410
-        in vec3 color_data;
-        out vec4 frag_color;
-        void main() {
-            frag_color = vec4(color_data,1.0);
-        };
-    )";
+    string v_shader = loader.getData();
+    const char* vertex_shader = v_shader.c_str();
+
+    loader.clear();
+
+    loader.setFilePath("assets/shaders/default.frag");
+    string f_shader = loader.getData();
+
+    const char* frag_shader = f_shader.c_str();
     
     
-
-
     //Generate and bind vertex data
     GLuint vbo;
     glGenBuffers(1,&vbo);
@@ -189,16 +186,18 @@ void CameraMovement::draw(GLFWwindow* window) {
     glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,NULL);
     
     
+    Debug d;
 
     GLuint vs = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vs,1,&vertex_shader,NULL),
     glCompileShader(vs);
 
+    d.debug_shader(vs);
+
     GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fs,1,&frag_shader,NULL);
     glCompileShader(fs);
 
-    Debug d;
     d.debug_shader(fs);
 
     shader_program = glCreateProgram();
@@ -212,11 +211,14 @@ void CameraMovement::draw(GLFWwindow* window) {
     //Get the uniform variable location from GLSL 
     mvp_location = glGetUniformLocation(shader_program,"mvp");
 
+    resolution_location = glGetUniformLocation(shader_program,"u_resolution");
+    time_location = glGetUniformLocation(shader_program,"u_time");
+    
 
-    
-   //Assign the value from CPU (matrix) to the GPU (GLSL) variable via location
-    //glUniformMatrix4fv(matrix_location,1,GL_FALSE,matrix);
-    
+
+
+
+    // Culling configs for performance optimization 
     //glEnable(GL_CULL_FACE);
     //glCullFace(GL_BACK);
     //glFrontFace(GL_CW);
@@ -228,32 +230,59 @@ void CameraMovement::loop() {
     using namespace std;
 
     
-    static double prev_sec = glfwGetTime();
+    static GLfloat prev_sec = glfwGetTime();
     
-    double curr_sec = glfwGetTime();
-    double elapsed_sec = curr_sec - prev_sec;
+    GLfloat curr_sec = glfwGetTime();
+    GLfloat elapsed_sec = curr_sec - prev_sec;
     prev_sec = curr_sec;
 
-    speed += 0.01; 
+
+    totalTime += elapsed_sec;
+
 
     double angle =  elapsed_sec * speed + lastPos;
 
 
-   // model[0][0] = cos(speed);
-   // model[1][1] = sin(speed);
     //Camera projection
-
      //Model matrix
-     model = glm::rotate(model,glm::radians(0.5f),glm::vec3(0.5f,1.0f,0.0));
+//    model = glm::rotate(model,glm::radians(0.5f),glm::vec3(0.5f,1.0f,0.0));
+     //view  = glm::rotate(model,glm::radians(0.0f),glm::vec3(1.0f,1.0f,1.0));
+
+    handleKeyboard(mWindow);
     
     mvp = proj * view * model;
     glUniformMatrix4fv(mvp_location,1,GL_FALSE,&mvp[0][0]);
 
-   //Assign the value from CPU (matrix) to the GPU (GLSL) variable via location
-   //glUniformMatrix4fv(matrix_location,1,GL_FALSE,&matrix[0][0]);
+    
+    glUniformMatrix2fv(resolution_location,2,GL_FALSE,&windowSize[0]);
 
+
+    glUniform1f(time_location,totalTime);
+
+   
     glUseProgram(shader_program);
 
     glBindVertexArray(vao);
     glDrawArrays(GL_TRIANGLES,0,36);
+}
+
+
+
+void CameraMovement::handleKeyboard(GLFWwindow* window) {
+
+	if (glfwGetKey(window,GLFW_KEY_LEFT)) {
+            model = glm::rotate(model,glm::radians(speed),glm::vec3(0.0f,-1.0f,0.0));
+	}
+
+	if (glfwGetKey(window,GLFW_KEY_RIGHT)) {
+            model = glm::rotate(model,glm::radians(speed),glm::vec3(0.0f,1.0f,0.0));
+	}
+
+	if (glfwGetKey(window,GLFW_KEY_UP)) {
+            model = glm::rotate(model,glm::radians(speed),glm::vec3(-1.0f,0.0f,0.0));
+	}
+	
+	if (glfwGetKey(window,GLFW_KEY_DOWN)) {
+            model = glm::rotate(model,glm::radians(speed),glm::vec3(1.0f,0.0f,0.0));
+	}
 }

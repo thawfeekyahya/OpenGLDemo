@@ -92,7 +92,7 @@ void Square::draw(GLFWwindow* window) {
     glBufferData(GL_ARRAY_BUFFER,sizeof(points),points,GL_STATIC_DRAW);
    
 
-    //Assign vertex data to vertex attribute object
+    //Assign vertex data(vertex attribute) to vertex array object
     vao = 0;
     glGenVertexArrays(1,&vao);
     glBindVertexArray(vao);
@@ -105,7 +105,7 @@ void Square::draw(GLFWwindow* window) {
     glBindBuffer(GL_ARRAY_BUFFER,color_vbo);
     glBufferData(GL_ARRAY_BUFFER,sizeof(colors),colors,GL_STATIC_DRAW);
     
-    //Assign color data to vertex array object
+    //Assign color data (vertex attribute) to vertex array object
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,NULL);
     
