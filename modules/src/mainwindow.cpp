@@ -11,7 +11,6 @@
 using namespace std;
 
 MainWindow::MainWindow() {
-
 }
 
 unsigned MainWindow::getWidth() const {
@@ -63,6 +62,10 @@ int MainWindow::initialize() {
 
 GLFWwindow* MainWindow::createWindow(unsigned width,unsigned height,std::string title) {
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     m_window = glfwCreateWindow(width,height,title.c_str(),NULL,NULL);
     m_width = width;
     m_height = height;
@@ -88,6 +91,9 @@ void MainWindow::makeEnv(GLFWwindow* window) {
    glEnable(GL_DEPTH_TEST);
    glDepthFunc(GL_LESS);
    glfwWindowHint(GLFW_SAMPLES,4);
+
+   const GLubyte* glslVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
+   printf("GLSL version: %s\n", glslVersion);
 }
 
 

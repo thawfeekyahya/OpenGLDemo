@@ -11,21 +11,17 @@
 #include "CameraMovement.h" 
 
 CameraMovement::CameraMovement() {
-
       
       windowSize = glm::vec2(640,480);
-
 
       model = glm::mat4(1.0f);
 
       glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -2.5f));
       // Apply the translation to the model matrix
-      
       model = translation * model;
 
       //Projection matrix on screen
       proj = glm::perspective (viewAngle,aspect,nearDist,farDist);
-
 
       //Camera Position
       //Camera target position
@@ -41,59 +37,21 @@ CameraMovement::CameraMovement() {
 void CameraMovement::draw(GLFWwindow* window) {
 
     mWindow = window;
+
     GLfloat points[] = {
-	    
-       -0.5,0.5,0.0,  // Cordinates for the A triangle
-       -0.5,-0.5,0.0,  
-        0.5,-0.5,0.0,  
-        
-        -0.5,0.5,0.0, 
-        0.5,0.5,0.0,  // Cordinates for the B triangle
-        0.5,-0.5,0.0,
-
-        
-        0.5,-0.5,0.0,  
-        0.5,-0.5,1.0,  // Cordinates for the C triangle
-        0.5,0.5,1.0,  
-        
-        0.5,-0.5,0.0, 
-        0.5,0.5,0.0,  // Cordinates for the D triangle
-        0.5,0.5,1.0,
-	
-       -0.5,0.5,1.0,  // Cordinates for the E triangle
-        0.5,0.5,1.0,  
-       -0.5,0.5,0.0,  
-        
-        -0.5,0.5,0.0, 
-        0.5,0.5,0.0,  // Cordinates for the F triangle
-        0.5,0.5,1.0,
-		
-       -0.5,-0.5,0.0,  // Cordinates for the G triangle
-       -0.5,0.5,0.0,  
-       -0.5,0.5,1.0,  
-        
-        -0.5,-0.5,1.0, 
-        -0.5,0.5,1.0,  // Cordinates for the H triangle
-        -0.5,-0.5,0.0,
-
-       -0.5,-0.5,0.0,  // Cordinates for the I triangle
-       0.5,-0.5,0.0,  
-       0.5,-0.5,1.0,  
-        
-        0.5,-0.5,1.0, 
-       -0.5,-0.5,1.0,  // Cordinates for the J triangle
-       -0.5,-0.5,0.0,
-		
-       -0.5,0.5,1.0,  // Cordinates for the K triangle
-       -0.5,-0.5,1.0,  
-        0.5,-0.5,1.0,  
-        
-        -0.5,0.5,1.0, 
-        0.5,0.5,1.0,  // Cordinates for the L triangle
-        0.5,-0.5,1.0
+        // Front face
+        -1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f,
+        // Back face
+        -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,
+        // Left face
+        -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  1.0f,
+        // Right face
+         1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,
+        // Top face
+        -1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f,
+        // Bottom face
+        -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f, -1.0f
     };
-
-
 
     GLfloat colors[] = {
 
@@ -147,6 +105,26 @@ void CameraMovement::draw(GLFWwindow* window) {
         0.0,1.0,1.0
     };
     
+    // Face indices: 1 index per vertex, each corresponding to a face
+    GLuint faceIndices[] = {
+        0, 0, 0, 0, 0, 0, // Front face
+        1, 1, 1, 1, 1, 1, // Back face
+        2, 2, 2, 2, 2, 2, // Left face
+        3, 3, 3, 3, 3, 3, // Right face
+        4, 4, 4, 4, 4, 4, // Top face
+        5, 5, 5, 5, 5, 5  // Bottom face
+    };
+
+    // Colors for each face (6 faces)
+    GLfloat faceColors[] = {
+        1.0f, 1.0f, 1.0f, // Face 0 - White
+        0.0f, 0.0f, 1.0f, // Face 1 - Green
+        0.0f, 1.0f, 1.0f, // Face 2 - Blue
+        1.0f, 0.0f, 1.0f, // Face 3 - Magenta
+        0.0f, 1.0f, 1.0f, // Face 4 - Cyan
+        1.0f, 1.0f, 0.0f, // Face 5 - Yellow
+        0.0f, 1.0f, 1.0f, // Face 4 - Cyan
+    };
 
     ShaderLoader loader("assets/shaders/default.vert");
 
@@ -159,33 +137,54 @@ void CameraMovement::draw(GLFWwindow* window) {
     string f_shader = loader.getData();
 
     const char* frag_shader = f_shader.c_str();
-    
-    
-    //Generate and bind vertex data
-    GLuint vbo;
-    glGenBuffers(1,&vbo);
-    glBindBuffer(GL_ARRAY_BUFFER,vbo);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(points),points,GL_STATIC_DRAW);
-   
 
-    //Assign vertex data to vertex attribute object
+
+    //Create default vertex array object----------------------------------------------------------------------------------
     vao = 0;
     glGenVertexArrays(1,&vao);
     glBindVertexArray(vao);
+
+    //Create vertex buffer and color buffers------------------------------------------------------------------------------
+    
+    
+    //Generate and bind vertex data
+    GLuint vertex_buffer;
+    glGenBuffers(1,&vertex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER,vertex_buffer);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(points),points,GL_STATIC_DRAW);
+
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,NULL);
-    
+
+
     //Generate and bind color data
-    GLuint color_vbo;
-    glGenBuffers(1,&color_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER,color_vbo);
+    GLuint color_buffer;
+    glGenBuffers(1,&color_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER,color_buffer);
     glBufferData(GL_ARRAY_BUFFER,sizeof(colors),colors,GL_STATIC_DRAW);
-    
-    //Assign color data to vertex array object
+   
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,0,NULL);
+
+    //------------------------------------------------------------------------------------------------------------------- 
     
-    
+    GLuint faceIndex_buffer;
+    glGenBuffers(1, &faceIndex_buffer);
+    glBindBuffer(GL_ARRAY_BUFFER,faceIndex_buffer);
+    glBufferData(GL_ARRAY_BUFFER,sizeof(faceIndices),faceIndices,GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(2);
+    glVertexAttribIPointer(2,1,GL_UNSIGNED_INT,0,NULL);
+
+    GLuint faceColors_buffer;
+    glGenBuffers(1,&faceColors_buffer);
+    glBindBuffer(GL_UNIFORM_BUFFER,faceColors_buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(faceColors), faceColors, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 4, faceColors_buffer);
+
+   //---------------------------------------------------------------------------------------------------------------------
+   
     Debug d;
 
     GLuint vs = glCreateShader(GL_VERTEX_SHADER);
@@ -207,16 +206,14 @@ void CameraMovement::draw(GLFWwindow* window) {
 
     glLinkProgram(shader_program);
     
-    
     //Get the uniform variable location from GLSL 
     mvp_location = glGetUniformLocation(shader_program,"mvp");
 
     resolution_location = glGetUniformLocation(shader_program,"u_resolution");
     time_location = glGetUniformLocation(shader_program,"u_time");
-    
 
-
-
+/*    GLuint faceColorsLocation = glGetUniformLocation(shader_program, "faceClrs");
+    glUniform3fv(faceColorsLocation, 6, faceColors); */
 
     // Culling configs for performance optimization 
     //glEnable(GL_CULL_FACE);

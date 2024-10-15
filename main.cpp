@@ -36,8 +36,8 @@ int main() {
         return 1;
     }
 
-    w.makeEnv(window);
 
+    w.makeEnv(window);
     
     CameraMovement s;
     s.draw(window);
@@ -45,17 +45,11 @@ int main() {
     w.loop(looper,window);
     
     Log l;
-    l.appendLog("now this is another message 1");
-    l.appendLog("now this is another message 2",2);
-    l.appendLog("now this is another message 3",3);
-
-
     int v;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS,&v);
     l.appendLog("GL_MAX_DRAW_BUFFER->",v);
 
     glfwTerminate();
-
 
     return 0;
 }
