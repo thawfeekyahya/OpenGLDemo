@@ -24,13 +24,16 @@ int main() {
     int isokay = w.initialize();
 
     if (isokay == 1) {
-        cerr<<"Could not launch GLFW3A"<<endl;
+        cerr<<"Could not launch"<<endl;
         return 1;
     } 
 
     GLFWwindow* window =  w.createWindow(640,480,"Hello Triangle");
 
     if(!window) {
+        const char* description;
+        int code = glfwGetError(&description);
+        fprintf(stderr, "Window Creation Error (%d): %s\n", code, description);
         cerr<<"Could not open window GLFW3 Window"<<endl;
         glfwTerminate();
         return 1;
