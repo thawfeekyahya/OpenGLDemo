@@ -62,14 +62,21 @@ int MainWindow::initialize() {
 
 GLFWwindow* MainWindow::createWindow(unsigned width,unsigned height,std::string title) {
 
+    //glfwDefaultWindowHints();
+    
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 
     m_window = glfwCreateWindow(width,height,title.c_str(),NULL,NULL);
     m_width = width;
     m_height = height;
     m_title = title;
+
+    glfwMakeContextCurrent(m_window);
+
+
     
     //Check primary monitor
     
@@ -93,7 +100,15 @@ void MainWindow::makeEnv(GLFWwindow* window) {
    glfwWindowHint(GLFW_SAMPLES,4);
 
    const GLubyte* glslVersion = glGetString(GL_SHADING_LANGUAGE_VERSION);
+   const GLubyte* glVersion  = glGetString(GL_VERSION);
+   const GLubyte* renderer  = glGetString(GL_RENDERER);
+   const GLubyte* vendor  = glGetString(GL_VENDOR);
+
    printf("GLSL version: %s\n", glslVersion);
+   printf("GL version: %s\n", glVersion);
+   printf("renderer: %s\n", renderer);
+   printf("vendor : %s\n", vendor);
+
 }
 
 
